@@ -1,3 +1,19 @@
+背景，最近几天闲着研究Kubernetes，发现使用手动二进制安装会有些繁琐。经过突发奇想，就出现这个脚本​。
+
+
+该脚本不及互联网上其他大佬的一件脚本，该脚本仅仅是突发奇想编写的，希望大佬​不喜勿喷。
+
+
+这个脚本执行环境比较苛刻，我写的这个脚本比较垃圾，还未能达到各种环境下都可以执行​。
+
+
+
+当前脚本Kubernetes集群，以及lb负载均衡，需要在CentOS系统，执行脚本节点可以选择Ubuntu或者CentOS系统​。
+
+
+
+当前脚本中引用的Kubernetes二进制包是v1.23.3
+
 | 主机名称 | IP地址 | 说明  | 软件  |
 | --- | --- | --- | --- |
 | Master01 | 192.168.1.40 | master节点 | kube-apiserver、kube-controller-manager、kube-scheduler、etcd、kubelet、kube-proxy、nfs-client |
