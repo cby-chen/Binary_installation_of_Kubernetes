@@ -1,20 +1,30 @@
-背景，最近几天闲着研究Kubernetes，发现使用手动二进制安装会有些繁琐。经过突发奇想，就出现这个脚本​。
+  
 
+**背景**，最近几天闲着研究Kubernetes，发现使用手动二进制安装会有些繁琐。经过突发奇想，就出现这个脚本。
 
-该脚本不及互联网上其他大佬的一件脚本，该脚本仅仅是突发奇想编写的，希望大佬​不喜勿喷。
+  
 
+**声明**，该脚本不及互联网上其他大佬的一件脚本，该脚本仅仅是突发奇想编写的，希望大佬不喜勿喷。
 
-这个脚本执行环境比较苛刻，我写的这个脚本比较垃圾，还未能达到各种环境下都可以执行​。
+  
 
+这个脚本执行环境比较苛刻，我写的这个脚本比较垃圾，还未能达到各种环境下都可以执行。  
 
+  
 
-当前脚本Kubernetes集群，以及lb负载均衡，需要在CentOS系统，执行脚本节点可以选择Ubuntu或者CentOS系统​。
+当前脚本Kubernetes集群，以及lb负载均衡，需要在CentOS系统，执行脚本节点可以选择Ubuntu或者CentOS系统。  
 
-
+  
 
 当前脚本中引用的Kubernetes二进制包是v1.23.3
 
-| 主机名称 | IP地址 | 说明  | 软件  |
+  
+
+![图片](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/31d5ac532dde4228996cc7404e4ec823~tplv-k3u1fbpfcp-zoom-1.image)
+
+  
+
+| 主机名称 | IP地址 | 说明 | 软件 |
 | --- | --- | --- | --- |
 | Master01 | 192.168.1.40 | master节点 | kube-apiserver、kube-controller-manager、kube-scheduler、etcd、kubelet、kube-proxy、nfs-client |
 | Master02 | 192.168.1.41 | master节点 | kube-apiserver、kube-controller-manager、kube-scheduler、etcd、kubelet、kube-proxy、nfs-client |
@@ -23,14 +33,25 @@
 | Node02 | 192.168.1.44 | node节点 | kubelet、kube-proxy、nfs-client |
 | Lb01 | 192.168.1.45 | node节点 | kubelet、kube-proxy、nfs-client |
 | Lb02 | 192.168.1.46 | node节点 | kubelet、kube-proxy、nfs-client |
-|     | 192.168.1.55 | vip |     |
+|   
+ | 192.168.1.55 | vip |   
+ |
+|   
+ |   
+ |   
+ |   
+ |
 | cby | 192.168.1.60 | 执行脚本节点 | bash |
+
+  
 
 作者：陈步云
 
 微信：15648907522
 
-项目地址：https://github.com/cby-chen/Binary_installation_of_Kubernetes
+项目地址：https://github.com/cby-chen/Binary\_installation\_of\_Kubernetes
+
+  
 
 使用说明：
 
@@ -44,8 +65,7 @@
 
 该脚本暂时不支持自定义k8s结构，需要严格执行该结构。
 
-```bash
-
+```
 脚本中是需要在GitHub上下载软件包
 可以手动提前下载好
 
@@ -87,3 +107,20 @@ export eth="ens18"
 bash -x Binary_installation_of_Kubernetes.sh
 
 ```
+
+
+https://www.oiox.cn/
+https://www.chenby.cn/
+https://cby-chen.github.io/
+https://weibo.com/u/5982474121
+https://blog.csdn.net/qq_33921750
+https://my.oschina.net/u/3981543
+https://www.zhihu.com/people/chen-bu-yun-2
+https://segmentfault.com/u/hppyvyv6/articles
+https://juejin.cn/user/3315782802482007
+https://space.bilibili.com/352476552/article
+https://cloud.tencent.com/developer/column/93230
+https://www.jianshu.com/u/0f894314ae2c
+https://www.toutiao.com/c/user/token/MS4wLjABAAAAeqOrhjsoRZSj7iBJbjLJyMwYT5D0mLOgCoo4pEmpr4A/
+CSDN、GitHub、知乎、开源中国、思否、掘金、简书、
+腾讯云、哔哩哔哩、今日头条、新浪微博、个人博客、全网可搜《小陈运维》
