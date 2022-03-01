@@ -45,6 +45,13 @@
 该脚本暂时不支持自定义k8s结构，需要严格执行该结构。
 
 ```bash
+
+脚本中是需要在GitHub上下载软件包
+可以手动提前下载好
+
+wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar​
+
+
 下载脚本
 
 wget https://www.oiox.cn/Binary_installation_of_Kubernetes.sh
