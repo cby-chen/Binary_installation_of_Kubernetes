@@ -27,7 +27,7 @@ export ip_segment="192.168.1.0\/24"
 #k8s自定义域名
 export domain="x.oiox.cn"
 
-#服务器网卡名
+#物理机网卡名
 export eth="ens18"
 
 export master01="k8s-master01"
@@ -47,6 +47,7 @@ export Master='k8s-master01 k8s-master02 k8s-master03'
 export Work='k8s-node01 k8s-node02'
 export lb='lb01 lb02'
 
+export filesize=$(ls -l Kubernetes.tar | awk '{ print $5 }')
 
 
 function ping_test() {
@@ -144,10 +145,6 @@ echo "安装$HOST 基础环境"
 
 ssh root@$HOST "yum update ; yum -y install wget jq psmisc vim net-tools  telnet yum-utils device-mapper-persistent-data lvm2 git network-scripts tar curl chrony -y"
 ssh root@$HOST "yum install epel* -y"
-
-echo "安装$HOST docker"
-
-ssh root@$HOST "curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun"
 
 echo "关闭$HOST 防火墙"
 
@@ -291,6 +288,22 @@ for HOST in $other;do
     ssh root@$HOST "yum install chrony -y ; sed -i "s#2.centos.pool.ntp.org#10.0.0.21#g" /etc/chrony.conf ; systemctl restart chronyd ; systemctl enable chronyd" 
 done
 
+for HOST in $k8s;do
+{
+
+echo "安装$HOST docker"
+
+ssh root@$HOST "yum install -y yum-utils device-mapper-persistent-data lvm2"
+ssh root@$HOST "wget -O /etc/yum.repos.d/docker-ce.repo https://download.docker.com/linux/centos/docker-ce.repo"
+ssh root@$HOST "sudo sed -i 's+download.docker.com+mirrors.tuna.tsinghua.edu.cn/docker-ce+' /etc/yum.repos.d/docker-ce.repo"
+ssh root@$HOST "yum makecache"
+ssh root@$HOST "yum -y install docker-ce"
+ssh root@$HOST "systemctl  enable --now docker"
+
+}   >> $HOST.txt 
+done
+wait 
+
 }
 
 function Containerd() {
@@ -333,18 +346,21 @@ for HOST in $k8s;do
 done
 
 
-
-
-
-export filesize="ls -l Kubernetes.tar | awk '{ print \$5 }'"
-
-if (( $filesize == 649707520 )); then
-    echo "下载所需程序"
-    rm -f Kubernetes.tar
-    wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
-else
+if [ -f "Kubernetes.tar" ]; then
     echo "所需程序已存在"
+    if (( $filesize != 649707520 )); then
+        echo "下载所需程序"
+        rm -f Kubernetes.tar
+        wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
+    else
+        echo "所需程序已存在"
+        rm -f Kubernetes.tar
+        wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
+    fi
+else
+    echo "下载所需程序"
 fi
+
 
 if [ -d "Kubernetes" ]; then
     echo "directory \"Kubernetes\" exists"
