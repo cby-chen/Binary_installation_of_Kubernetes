@@ -33,15 +33,9 @@
 | Node02 | 192.168.1.44 | node节点 | kubelet、kube-proxy、nfs-client |
 | Lb01 | 192.168.1.45 | node节点 | kubelet、kube-proxy、nfs-client |
 | Lb02 | 192.168.1.46 | node节点 | kubelet、kube-proxy、nfs-client |
-|   
- | 192.168.1.55 | vip |   
- |
-|   
- |   
- |   
- |   
- |
+|  | 192.168.1.55 | vip |  |
 | cby | 192.168.1.60 | 执行脚本节点 | bash |
+
 
   
 
