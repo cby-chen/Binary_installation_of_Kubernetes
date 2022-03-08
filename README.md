@@ -43,7 +43,7 @@
 
 微信：15648907522
 
-项目地址：https://github.com/cby-chen/Binary\_installation\_of\_Kubernetes
+项目地址：https://github.com/cby-chen/Binary_installation_of_Kubernetes
 
   
 
