@@ -12,14 +12,17 @@
 ### 
 
 #每个节点的IP
-export k8s_master01="192.168.1.40"
-export k8s_master02="192.168.1.41"
-export k8s_master03="192.168.1.42"
-export k8s_node01="192.168.1.43"
-export k8s_node02="192.168.1.44"
-export lb_01="192.168.1.45"
-export lb_02="192.168.1.46"
-export lb_vip="192.168.1.55"
+export k8s_master01="192.168.1.30"
+export k8s_master02="192.168.1.31"
+export k8s_master03="192.168.1.32"
+export k8s_node01="192.168.1.33"
+export k8s_node02="192.168.1.34"
+export k8s_node03="192.168.1.35"
+export k8s_node04="192.168.1.36"
+export k8s_node05="192.168.1.37"
+export lb_01="192.168.1.38"
+export lb_02="192.168.1.39"
+export lb_vip="192.168.1.88"
 
 #物理网络ip地址段
 export ip_segment="192.168.1.0\/24"
@@ -35,16 +38,19 @@ export master02="k8s-master02"
 export master03="k8s-master03"
 export node01="k8s-node01"
 export node02="k8s-node02"
+export node03="k8s-node03"
+export node04="k8s-node04"
+export node05="k8s-node05"
 export lb01="lb01"
 export lb02="lb02"
 
 
-export IP="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 lb01 lb02"
-export other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 lb01 lb02"
-export k8s_other="k8s-master02 k8s-master03 k8s-node01 k8s-node02"
-export k8s="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02"
+export IP="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 lb01 lb02"
+export other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 lb01 lb02"
+export k8s_other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05"
+export k8s="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05"
 export Master='k8s-master01 k8s-master02 k8s-master03'
-export Work='k8s-node01 k8s-node02'
+export Work='k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05'
 export lb='lb01 lb02'
 
 export filesize=$(ls -l Kubernetes.tar | awk '{ print $5 }')
@@ -85,6 +91,9 @@ $k8s_master02 k8s-master02
 $k8s_master03 k8s-master03
 $k8s_node01 k8s-node01
 $k8s_node02 k8s-node02
+$k8s_node03 k8s-node03
+$k8s_node04 k8s-node04
+$k8s_node05 k8s-node05
 $lb_01 lb01
 $lb_02 lb02
 $lb_vip lb-vip
@@ -126,6 +135,9 @@ $k8s_master02 k8s-master02
 $k8s_master03 k8s-master03
 $k8s_node01 k8s-node01
 $k8s_node02 k8s-node02
+$k8s_node03 k8s-node03
+$k8s_node04 k8s-node04
+$k8s_node05 k8s-node05
 $lb_01 lb01
 $lb_02 lb02
 $lb_vip lb-vip
@@ -354,18 +366,12 @@ if [ -f "Kubernetes.tar" ]; then
         wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
     else
         echo "所需程序已存在"
-        rm -f Kubernetes.tar
-        wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
     fi
 else
     echo "下载所需程序"
+    wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
 fi
 
-
-if [ -d "Kubernetes" ]; then
-    echo "directory \"Kubernetes\" exists"
-    rm -rf Kubernetes
-fi
 
 if [ -d "Kubernetes" ]; then
     echo "directory \"Kubernetes\" exists"
