@@ -33,6 +33,9 @@ export domain="x.oiox.cn"
 #物理机网卡名
 export eth="ens18"
 
+#三台服务器密码统一为123123
+export passwd="123123"
+
 export master01="k8s-master01"
 export master02="k8s-master02"
 export master03="k8s-master03"
@@ -113,7 +116,7 @@ fi
 
 rm -f /root/.ssh/id_rsa 
 ssh-keygen -f /root/.ssh/id_rsa -P ''
-export SSHPASS=123123
+export SSHPASS=$passwd
 for HOST in $IP;do
      sshpass -e ssh-copy-id -o StrictHostKeyChecking=no $HOST
 done
