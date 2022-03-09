@@ -200,7 +200,14 @@ ulimit -SHn 65535
 
 echo "升级$HOST 内核"
 
-ssh root@$HOST "yum install https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm -y ; yum  --disablerepo="*"  --enablerepo="elrepo-kernel"  list  available -y ; yum  --enablerepo=elrepo-kernel  install  kernel-ml -y ; grubby --default-kernel"
+os_version=$(ssh root@$HOST "cat /etc/os-release 2>/dev/null | grep VERSION_ID= | awk -F= '{print \$2}'")
+
+if [ "$os_version" = "\"7\"" ]; then
+      ssh root@$HOST "yum install https://www.elrepo.org/elrepo-release-7.el7.elrepo.noarch.rpm -y ; yum  --disablerepo="*"  --enablerepo="elrepo-kernel"  list  available -y ; yum  --enablerepo=elrepo-kernel  install  kernel-ml -y ; grubby --set-default \$(ls /boot/vmlinuz-* | grep elrepo) ; grubby --default-kernel"
+fi
+if [ ! "$os_version" = "\"8\"" ]; then
+      ssh root@$HOST "yum install https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm -y ; yum  --disablerepo="*"  --enablerepo="elrepo-kernel"  list  available -y ; yum  --enablerepo=elrepo-kernel  install  kernel-ml -y ; grubby --default-kernel"
+fi
 
 echo "安装$HOST ipvs模块"
 
