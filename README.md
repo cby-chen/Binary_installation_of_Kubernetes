@@ -60,9 +60,41 @@
 该脚本暂时不支持自定义k8s结构，需要严格执行该结构。
 
 
+------
+更新：
+
+现已支持centos7 和centos8 自动适配
+
+同时支持自定义k8s节点结构。
+
+在变量中需要几台节点就写几台节点即可
+注意的是，新增节点，要在脚本中的hosts中也要修改
+不建议乱改。
+
+
+如：
+
+cat > /etc/hosts <<EOF
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+$k8s_master01 k8s-master01
+$k8s_master02 k8s-master02
+$k8s_master03 k8s-master03
+$k8s_node01 k8s-node01
+$k8s_node02 k8s-node02
+$k8s_node03 k8s-node03
+$k8s_node04 k8s-node04
+$k8s_node05 k8s-node05
+$lb_01 lb01
+$lb_02 lb02
+$lb_vip lb-vip
+EOF
+
+
 ```
 脚本中是需要在GitHub上下载软件包
-可以手动提前下载好
+
+手动提前下载好
 
 wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar​
 
