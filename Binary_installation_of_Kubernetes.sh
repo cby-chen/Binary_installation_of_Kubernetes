@@ -355,7 +355,7 @@ systemctl enable chronyd
 
 for HOST in $other;do
     echo "配置主机$HOST时钟同步"
-    ssh root@$HOST "yum install chrony -y ; sed -i "s#2.centos.pool.ntp.org#10.0.0.21#g" /etc/chrony.conf ; systemctl restart chronyd ; systemctl enable chronyd" 
+    ssh root@$HOST "yum install chrony -y ; sed -i "s#2.centos.pool.ntp.org#$master01#g" /etc/chrony.conf ; systemctl restart chronyd ; systemctl enable chronyd" 
 done
 
 for HOST in $k8s;do
