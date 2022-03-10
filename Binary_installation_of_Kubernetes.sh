@@ -317,7 +317,7 @@ wait
 for HOST in $k8s;do
 
     echo "重启$HOST"
-    ssh root@$HOST  "reboot -f"
+    ssh root@$HOST  "reboot"
 
 done
 
