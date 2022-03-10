@@ -20,8 +20,18 @@ export k8s_node02="192.168.1.34"
 export k8s_node03="192.168.1.35"
 export k8s_node04="192.168.1.36"
 export k8s_node05="192.168.1.37"
-export lb_01="192.168.1.38"
-export lb_02="192.168.1.39"
+export k8s_node06="192.168.1.38"
+export k8s_node07="192.168.1.39"
+export k8s_node08="192.168.1.40"
+export k8s_node09="192.168.1.41"
+export k8s_node10="192.168.1.42"
+export k8s_node11="192.168.1.43"
+export k8s_node12="192.168.1.44"
+export k8s_node13="192.168.1.45"
+export k8s_node14="192.168.1.46"
+export k8s_node15="192.168.1.47"
+export lb_01="192.168.1.48"
+export lb_02="192.168.1.49"
 export lb_vip="192.168.1.88"
 
 #物理网络ip地址段
@@ -44,16 +54,26 @@ export node02="k8s-node02"
 export node03="k8s-node03"
 export node04="k8s-node04"
 export node05="k8s-node05"
+export node06="k8s-node06"
+export node07="k8s-node07"
+export node08="k8s-node08"
+export node09="k8s-node09"
+export node10="k8s-node10"
+export node11="k8s-node11"
+export node12="k8s-node12"
+export node13="k8s-node13"
+export node14="k8s-node14"
+export node15="k8s-node15"
 export lb01="lb01"
 export lb02="lb02"
 
 
-export IP="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 lb01 lb02"
-export other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 lb01 lb02"
-export k8s_other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05"
-export k8s="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05"
+export IP="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 k8s-node06 k8s-node07 k8s-node08 k8s-node09 k8s-node10 k8s-node11 k8s-node12 k8s-node13 k8s-node14 k8s-node15 lb01 lb02"
+export other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 k8s-node06 k8s-node07 k8s-node08 k8s-node09 k8s-node10 k8s-node11 k8s-node12 k8s-node13 k8s-node14 k8s-node15 lb01 lb02"
+export k8s_other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 k8s-node06 k8s-node07 k8s-node08 k8s-node09 k8s-node10 k8s-node11 k8s-node12 k8s-node13 k8s-node14 k8s-node15"
+export k8s="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 k8s-node06 k8s-node07 k8s-node08 k8s-node09 k8s-node10 k8s-node11 k8s-node12 k8s-node13 k8s-node14 k8s-node15"
 export Master='k8s-master01 k8s-master02 k8s-master03'
-export Work='k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05'
+export Work='k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 k8s-node06 k8s-node07 k8s-node08 k8s-node09 k8s-node10 k8s-node11 k8s-node12 k8s-node13 k8s-node14 k8s-node15'
 export lb='lb01 lb02'
 
 export filesize=$(ls -l Kubernetes.tar | awk '{ print $5 }')
@@ -97,6 +117,16 @@ $k8s_node02 k8s-node02
 $k8s_node03 k8s-node03
 $k8s_node04 k8s-node04
 $k8s_node05 k8s-node05
+$k8s_node06 k8s-node06
+$k8s_node07 k8s-node07
+$k8s_node08 k8s-node08
+$k8s_node09 k8s-node09
+$k8s_node10 k8s-node10
+$k8s_node11 k8s-node11
+$k8s_node12 k8s-node12
+$k8s_node13 k8s-node13
+$k8s_node14 k8s-node14
+$k8s_node15 k8s-node15
 $lb_01 lb01
 $lb_02 lb02
 $lb_vip lb-vip
@@ -128,6 +158,27 @@ function init_all() {
 for HOST in $k8s;do
 {
 
+echo "配置主机 $HOST yum源"
+
+ssh root@$HOST "sed -e 's|^mirrorlist=|#mirrorlist=|g' -e 's|^#baseurl=http://mirror.centos.org/\$contentdir|baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos|g' -i.bak /etc/yum.repos.d/CentOS-*.repo"
+
+echo "安装$HOST 基础环境"
+
+ssh root@$HOST "yum update -y ; yum -y install wget jq psmisc vim net-tools  telnet yum-utils device-mapper-persistent-data lvm2 git network-scripts tar curl chrony -y"
+ssh root@$HOST "yum install epel* -y"
+wait
+}   >> $HOST.txt &
+done
+wait
+
+
+for HOST in $k8s;do
+{
+
+echo "配置 $HOST 主机名"
+
+ssh root@$HOST "hostnamectl set-hostname  $HOST"
+
 echo "在主机 $HOST 配置hosts配置..."
 
 ssh root@$HOST "cat > /etc/hosts << EOF 
@@ -141,25 +192,21 @@ $k8s_node02 k8s-node02
 $k8s_node03 k8s-node03
 $k8s_node04 k8s-node04
 $k8s_node05 k8s-node05
+$k8s_node06 k8s-node06
+$k8s_node07 k8s-node07
+$k8s_node08 k8s-node08
+$k8s_node09 k8s-node09
+$k8s_node10 k8s-node10
+$k8s_node11 k8s-node11
+$k8s_node12 k8s-node12
+$k8s_node13 k8s-node13
+$k8s_node14 k8s-node14
+$k8s_node15 k8s-node15
 $lb_01 lb01
 $lb_02 lb02
 $lb_vip lb-vip
 EOF
 " 
-
-
-echo "配置 $HOST 主机名"
-
-ssh root@$HOST "hostnamectl set-hostname  $HOST"
-
-echo "配置主机 $HOST yum源"
-
-ssh root@$HOST "sed -e 's|^mirrorlist=|#mirrorlist=|g' -e 's|^#baseurl=http://mirror.centos.org/\$contentdir|baseurl=https://mirrors.tuna.tsinghua.edu.cn/centos|g' -i.bak /etc/yum.repos.d/CentOS-*.repo"
-
-echo "安装$HOST 基础环境"
-
-ssh root@$HOST "yum update ; yum -y install wget jq psmisc vim net-tools  telnet yum-utils device-mapper-persistent-data lvm2 git network-scripts tar curl chrony -y"
-ssh root@$HOST "yum install epel* -y"
 
 echo "关闭$HOST 防火墙"
 
@@ -263,13 +310,14 @@ EOF"
 
 ssh root@$HOST "sysctl --system"
 
-}   >> $HOST.txt &
+}   >> $HOST.txt
 done
 wait 
 
 for HOST in $k8s;do
+
     echo "重启$HOST"
-    ssh root@$HOST  "reboot"
+    ssh root@$HOST  "reboot -f"
 
 done
 
@@ -348,7 +396,7 @@ image-endpoint: unix:///run/containerd/containerd.sock
 timeout: 10
 debug: false
 EOF"
-} >> $HOST.txt &
+} >> $HOST.txt
 done
 
 }
@@ -383,104 +431,98 @@ else
 fi
 
 
-if [ -d "Kubernetes" ]; then
-    echo "directory \"Kubernetes\" exists"
-else 
+echo "解压安装包"
 
-    echo "解压安装包"
+tar xf Kubernetes.tar
+scp -r Kubernetes  root@$master01:
 
-    tar xf Kubernetes.tar
-    scp -r Kubernetes  root@$master01:
+echo "配置证书工具"
 
-    echo "配置证书工具"
+cd Kubernetes/cby/ || exit
+cp cfssl_1.6.1_linux_amd64  /usr/local/bin/cfssl
+cp cfssljson_1.6.1_linux_amd64 /usr/local/bin/cfssljson
+chmod +x  /usr/local/bin/cfssljson  /usr/local/bin/cfssl
 
-    cd Kubernetes/cby/ || exit
-    cp cfssl_1.6.1_linux_amd64  /usr/local/bin/cfssl
-    cp cfssljson_1.6.1_linux_amd64 /usr/local/bin/cfssljson
-    chmod +x  /usr/local/bin/cfssljson  /usr/local/bin/cfssl
+echo "拷贝所需程序包"
 
-    echo "拷贝所需程序包"
-    
-    tar -xf kubernetes-server-linux-amd64.tar.gz  --strip-components=3 -C /usr/local/bin kubernetes/server/bin/kube{let,ctl,-apiserver,-controller-manager,-scheduler,-proxy}
-    tar -xf etcd-v3.5.2-linux-amd64.tar.gz --strip-components=1 -C /usr/local/bin etcd-v3.5.2-linux-amd64/etcd{,ctl}
+tar -xf kubernetes-server-linux-amd64.tar.gz  --strip-components=3 -C /usr/local/bin kubernetes/server/bin/kube{let,ctl,-apiserver,-controller-manager,-scheduler,-proxy}
+tar -xf etcd-v3.5.2-linux-amd64.tar.gz --strip-components=1 -C /usr/local/bin etcd-v3.5.2-linux-amd64/etcd{,ctl}
 
-    echo "将所需组件发送到k8s节点"
-    for NODE in $Master; do echo "$NODE"; scp /usr/local/bin/kube{let,ctl,-apiserver,-controller-manager,-scheduler,-proxy} "$NODE":/usr/local/bin/; scp /usr/local/bin/etcd* $NODE:/usr/local/bin/; done
-    for NODE in $Work; do     scp /usr/local/bin/kube{let,-proxy} "$NODE":/usr/local/bin/ ; done
+echo "将所需组件发送到k8s节点"
+for NODE in $Master; do echo "$NODE"; scp /usr/local/bin/kube{let,ctl,-apiserver,-controller-manager,-scheduler,-proxy} "$NODE":/usr/local/bin/; scp /usr/local/bin/etcd* $NODE:/usr/local/bin/; done
+for NODE in $Work; do     scp /usr/local/bin/kube{let,-proxy} "$NODE":/usr/local/bin/ ; done
 
-    mkdir -p /opt/cni/bin
-    mkdir /etc/etcd/ssl -p
+mkdir -p /opt/cni/bin
+mkdir /etc/etcd/ssl -p
 
-    echo "生成etcd证书"
-    cd ../pki/ || exit
-    cfssl gencert -initca etcd-ca-csr.json | cfssljson -bare /etc/etcd/ssl/etcd-ca
-    cfssl gencert -ca=/etc/etcd/ssl/etcd-ca.pem -ca-key=/etc/etcd/ssl/etcd-ca-key.pem -config=ca-config.json -hostname=127.0.0.1,k8s-master01,k8s-master02,k8s-master03,$k8s_master01,$k8s_master02,$k8s_master03  -profile=kubernetes etcd-csr.json | cfssljson -bare /etc/etcd/ssl/etcd
+echo "生成etcd证书"
+cd ../pki/ || exit
+cfssl gencert -initca etcd-ca-csr.json | cfssljson -bare /etc/etcd/ssl/etcd-ca
+cfssl gencert -ca=/etc/etcd/ssl/etcd-ca.pem -ca-key=/etc/etcd/ssl/etcd-ca-key.pem -config=ca-config.json -hostname=127.0.0.1,k8s-master01,k8s-master02,k8s-master03,$k8s_master01,$k8s_master02,$k8s_master03  -profile=kubernetes etcd-csr.json | cfssljson -bare /etc/etcd/ssl/etcd
 
-    echo "分发etcd证书"
-    for NODE in $Master; do
-        ssh "$NODE" "mkdir -p /etc/etcd/ssl"
-        for FILE in etcd-ca-key.pem  etcd-ca.pem  etcd-key.pem  etcd.pem; do
-        scp /etc/etcd/ssl/${FILE} "$NODE":/etc/etcd/ssl/${FILE}
-        done
+echo "分发etcd证书"
+for NODE in $Master; do
+    ssh "$NODE" "mkdir -p /etc/etcd/ssl"
+    for FILE in etcd-ca-key.pem  etcd-ca.pem  etcd-key.pem  etcd.pem; do
+    scp /etc/etcd/ssl/${FILE} "$NODE":/etc/etcd/ssl/${FILE}
     done
+done
 
 
-    echo "生成k8s证书"
-    mkdir -p /etc/kubernetes/pki
-    cfssl gencert -initca ca-csr.json | cfssljson -bare /etc/kubernetes/pki/ca
-    cfssl gencert -ca=/etc/kubernetes/pki/ca.pem -ca-key=/etc/kubernetes/pki/ca-key.pem -config=ca-config.json -hostname=10.96.0.1,$lb_vip,127.0.0.1,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.default.svc.cluster.local,$domain,$k8s_master01,$k8s_master02,$k8s_master03 -profile=kubernetes   apiserver-csr.json | cfssljson -bare /etc/kubernetes/pki/apiserver
+echo "生成k8s证书"
+mkdir -p /etc/kubernetes/pki
+cfssl gencert -initca ca-csr.json | cfssljson -bare /etc/kubernetes/pki/ca
+cfssl gencert -ca=/etc/kubernetes/pki/ca.pem -ca-key=/etc/kubernetes/pki/ca-key.pem -config=ca-config.json -hostname=10.96.0.1,$lb_vip,127.0.0.1,kubernetes,kubernetes.default,kubernetes.default.svc,kubernetes.default.svc.cluster,kubernetes.default.svc.cluster.local,$domain,$k8s_master01,$k8s_master02,$k8s_master03 -profile=kubernetes   apiserver-csr.json | cfssljson -bare /etc/kubernetes/pki/apiserver
 
-    echo "生成k8s-apiserver证书"
-    cfssl gencert   -initca front-proxy-ca-csr.json | cfssljson -bare /etc/kubernetes/pki/front-proxy-ca 
-    cfssl gencert   -ca=/etc/kubernetes/pki/front-proxy-ca.pem   -ca-key=/etc/kubernetes/pki/front-proxy-ca-key.pem   -config=ca-config.json   -profile=kubernetes   front-proxy-client-csr.json | cfssljson -bare /etc/kubernetes/pki/front-proxy-client
+echo "生成k8s-apiserver证书"
+cfssl gencert   -initca front-proxy-ca-csr.json | cfssljson -bare /etc/kubernetes/pki/front-proxy-ca 
+cfssl gencert   -ca=/etc/kubernetes/pki/front-proxy-ca.pem   -ca-key=/etc/kubernetes/pki/front-proxy-ca-key.pem   -config=ca-config.json   -profile=kubernetes   front-proxy-client-csr.json | cfssljson -bare /etc/kubernetes/pki/front-proxy-client
 
-    echo "生成controller-manage证书"
-    cfssl gencert -ca=/etc/kubernetes/pki/ca.pem -ca-key=/etc/kubernetes/pki/ca-key.pem -config=ca-config.json -profile=kubernetes manager-csr.json | cfssljson -bare /etc/kubernetes/pki/controller-manager
+echo "生成controller-manage证书"
+cfssl gencert -ca=/etc/kubernetes/pki/ca.pem -ca-key=/etc/kubernetes/pki/ca-key.pem -config=ca-config.json -profile=kubernetes manager-csr.json | cfssljson -bare /etc/kubernetes/pki/controller-manager
 
-    kubectl config set-cluster kubernetes --certificate-authority=/etc/kubernetes/pki/ca.pem --embed-certs=true --server=https://$lb_vip:8443 --kubeconfig=/etc/kubernetes/controller-manager.kubeconfig
+kubectl config set-cluster kubernetes --certificate-authority=/etc/kubernetes/pki/ca.pem --embed-certs=true --server=https://$lb_vip:8443 --kubeconfig=/etc/kubernetes/controller-manager.kubeconfig
 
-    kubectl config set-context system:kube-controller-manager@kubernetes --cluster=kubernetes --user=system:kube-controller-manager --kubeconfig=/etc/kubernetes/controller-manager.kubeconfig
+kubectl config set-context system:kube-controller-manager@kubernetes --cluster=kubernetes --user=system:kube-controller-manager --kubeconfig=/etc/kubernetes/controller-manager.kubeconfig
 
 
-    kubectl config set-credentials system:kube-controller-manager --client-certificate=/etc/kubernetes/pki/controller-manager.pem --client-key=/etc/kubernetes/pki/controller-manager-key.pem --embed-certs=true --kubeconfig=/etc/kubernetes/controller-manager.kubeconfig
+kubectl config set-credentials system:kube-controller-manager --client-certificate=/etc/kubernetes/pki/controller-manager.pem --client-key=/etc/kubernetes/pki/controller-manager-key.pem --embed-certs=true --kubeconfig=/etc/kubernetes/controller-manager.kubeconfig
 
-    kubectl config use-context system:kube-controller-manager@kubernetes --kubeconfig=/etc/kubernetes/controller-manager.kubeconfig
+kubectl config use-context system:kube-controller-manager@kubernetes --kubeconfig=/etc/kubernetes/controller-manager.kubeconfig
 
-    cfssl gencert -ca=/etc/kubernetes/pki/ca.pem -ca-key=/etc/kubernetes/pki/ca-key.pem -config=ca-config.json -profile=kubernetes scheduler-csr.json | cfssljson -bare /etc/kubernetes/pki/scheduler
+cfssl gencert -ca=/etc/kubernetes/pki/ca.pem -ca-key=/etc/kubernetes/pki/ca-key.pem -config=ca-config.json -profile=kubernetes scheduler-csr.json | cfssljson -bare /etc/kubernetes/pki/scheduler
 
-    kubectl config set-cluster kubernetes --certificate-authority=/etc/kubernetes/pki/ca.pem --embed-certs=true --server=https://$lb_vip:8443 --kubeconfig=/etc/kubernetes/scheduler.kubeconfig
+kubectl config set-cluster kubernetes --certificate-authority=/etc/kubernetes/pki/ca.pem --embed-certs=true --server=https://$lb_vip:8443 --kubeconfig=/etc/kubernetes/scheduler.kubeconfig
 
-    kubectl config set-credentials system:kube-scheduler --client-certificate=/etc/kubernetes/pki/scheduler.pem --client-key=/etc/kubernetes/pki/scheduler-key.pem --embed-certs=true --kubeconfig=/etc/kubernetes/scheduler.kubeconfig
+kubectl config set-credentials system:kube-scheduler --client-certificate=/etc/kubernetes/pki/scheduler.pem --client-key=/etc/kubernetes/pki/scheduler-key.pem --embed-certs=true --kubeconfig=/etc/kubernetes/scheduler.kubeconfig
 
-    kubectl config set-context system:kube-scheduler@kubernetes --cluster=kubernetes --user=system:kube-scheduler --kubeconfig=/etc/kubernetes/scheduler.kubeconfig
+kubectl config set-context system:kube-scheduler@kubernetes --cluster=kubernetes --user=system:kube-scheduler --kubeconfig=/etc/kubernetes/scheduler.kubeconfig
 
-    kubectl config use-context system:kube-scheduler@kubernetes --kubeconfig=/etc/kubernetes/scheduler.kubeconfig
+kubectl config use-context system:kube-scheduler@kubernetes --kubeconfig=/etc/kubernetes/scheduler.kubeconfig
 
-    cfssl gencert -ca=/etc/kubernetes/pki/ca.pem -ca-key=/etc/kubernetes/pki/ca-key.pem  -config=ca-config.json -profile=kubernetes admin-csr.json | cfssljson -bare /etc/kubernetes/pki/admin
+cfssl gencert -ca=/etc/kubernetes/pki/ca.pem -ca-key=/etc/kubernetes/pki/ca-key.pem  -config=ca-config.json -profile=kubernetes admin-csr.json | cfssljson -bare /etc/kubernetes/pki/admin
 
-    kubectl config set-cluster kubernetes     --certificate-authority=/etc/kubernetes/pki/ca.pem     --embed-certs=true     --server=https://$lb_vip:8443     --kubeconfig=/etc/kubernetes/admin.kubeconfig
+kubectl config set-cluster kubernetes     --certificate-authority=/etc/kubernetes/pki/ca.pem     --embed-certs=true     --server=https://$lb_vip:8443     --kubeconfig=/etc/kubernetes/admin.kubeconfig
 
-    kubectl config set-credentials kubernetes-admin     --client-certificate=/etc/kubernetes/pki/admin.pem     --client-key=/etc/kubernetes/pki/admin-key.pem     --embed-certs=true     --kubeconfig=/etc/kubernetes/admin.kubeconfig
+kubectl config set-credentials kubernetes-admin     --client-certificate=/etc/kubernetes/pki/admin.pem     --client-key=/etc/kubernetes/pki/admin-key.pem     --embed-certs=true     --kubeconfig=/etc/kubernetes/admin.kubeconfig
 
-    kubectl config set-context kubernetes-admin@kubernetes     --cluster=kubernetes     --user=kubernetes-admin     --kubeconfig=/etc/kubernetes/admin.kubeconfig
+kubectl config set-context kubernetes-admin@kubernetes     --cluster=kubernetes     --user=kubernetes-admin     --kubeconfig=/etc/kubernetes/admin.kubeconfig
 
-    kubectl config use-context kubernetes-admin@kubernetes     --kubeconfig=/etc/kubernetes/admin.kubeconfig
+kubectl config use-context kubernetes-admin@kubernetes     --kubeconfig=/etc/kubernetes/admin.kubeconfig
 
-    echo "创建ServiceAccount Key"
-    openssl genrsa -out /etc/kubernetes/pki/sa.key 2048
-    openssl rsa -in /etc/kubernetes/pki/sa.key -pubout -out /etc/kubernetes/pki/sa.pub
+echo "创建ServiceAccount Key"
+openssl genrsa -out /etc/kubernetes/pki/sa.key 2048
+openssl rsa -in /etc/kubernetes/pki/sa.key -pubout -out /etc/kubernetes/pki/sa.pub
 
-    echo "分发证书到每个节点"
-    for NODE in $Master; do 
-        for FILE in $(ls /etc/kubernetes/pki | grep -v etcd); do 
-        scp /etc/kubernetes/pki/"${FILE}" "$NODE":/etc/kubernetes/pki/"${FILE}";
-        done; 
-        for FILE in admin.kubeconfig controller-manager.kubeconfig scheduler.kubeconfig; do 
-        scp /etc/kubernetes/${FILE} "$NODE":/etc/kubernetes/${FILE};
-        done;
-    done
-
-fi
+echo "分发证书到每个节点"
+for NODE in $Master; do 
+    for FILE in $(ls /etc/kubernetes/pki | grep -v etcd); do 
+    scp /etc/kubernetes/pki/"${FILE}" "$NODE":/etc/kubernetes/pki/"${FILE}";
+    done; 
+    for FILE in admin.kubeconfig controller-manager.kubeconfig scheduler.kubeconfig; do 
+    scp /etc/kubernetes/${FILE} "$NODE":/etc/kubernetes/${FILE};
+    done;
+done
 
 }
 
