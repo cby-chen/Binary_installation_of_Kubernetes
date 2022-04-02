@@ -154,8 +154,17 @@ EOF
 
 bash -x Binary_installation_of_Kubernetes.sh
 
-```
 
+```
+dashboard
+```
+查看端口号
+kubectl get svc kubernetes-dashboard -n kubernetes-dashboard
+
+查看token
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+
+```
 
 https://www.oiox.cn/
 
