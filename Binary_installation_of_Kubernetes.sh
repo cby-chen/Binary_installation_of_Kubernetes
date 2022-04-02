@@ -4,35 +4,29 @@
 #   作者：陈步云
 #   微信：15648907522
 #   使用说明：
-#       该脚本需要八台服务器，在八台服务器中有一台是用于执行该脚本的，另外有五台k8s服务器，其他俩台作为lb负载均衡服务器。
-#       将其中七台服务器配置好静态IP，修改如下变量中的IP即可。
+#       该脚本示例需要十一台服务器，在十一台服务器中有一台是用于执行该脚本的，
+#       另外有八台k8s服务器，其他俩台作为lb负载均衡服务器。
+#
+#       将其中服务器配置好静态IP，修改如下变量中的IP即可。
 #       同时查看服务器中的网卡名，并将其修改。
+#
 #       执行脚本可使用bash -x 即可显示执行中详细信息。
-#       该脚本暂时不支持自定义k8s结构，需要严格执行该结构。
+#       该脚本已适配centos7和centos8。
+#       脚本中hosts有俩处，记得修改。
 ### 
 
 #每个节点的IP
-export k8s_master01="192.168.1.30"
-export k8s_master02="192.168.1.31"
-export k8s_master03="192.168.1.32"
-export k8s_node01="192.168.1.33"
-export k8s_node02="192.168.1.34"
-export k8s_node03="192.168.1.35"
-export k8s_node04="192.168.1.36"
-export k8s_node05="192.168.1.37"
-export k8s_node06="192.168.1.38"
-export k8s_node07="192.168.1.39"
-export k8s_node08="192.168.1.40"
-export k8s_node09="192.168.1.41"
-export k8s_node10="192.168.1.42"
-export k8s_node11="192.168.1.43"
-export k8s_node12="192.168.1.44"
-export k8s_node13="192.168.1.45"
-export k8s_node14="192.168.1.46"
-export k8s_node15="192.168.1.47"
-export lb_01="192.168.1.48"
-export lb_02="192.168.1.49"
-export lb_vip="192.168.1.88"
+export k8s_master01="192.168.1.61"
+export k8s_master02="192.168.1.62"
+export k8s_master03="192.168.1.63"
+export k8s_node01="192.168.1.64"
+export k8s_node02="192.168.1.65"
+export k8s_node03="192.168.1.66"
+export k8s_node04="192.168.1.67"
+export k8s_node05="192.168.1.68"
+export lb_01="192.168.1.57"
+export lb_02="192.168.1.58"
+export lb_vip="192.168.1.59"
 
 #物理网络ip地址段
 export ip_segment="192.168.1.0\/24"
@@ -54,29 +48,18 @@ export node02="k8s-node02"
 export node03="k8s-node03"
 export node04="k8s-node04"
 export node05="k8s-node05"
-export node06="k8s-node06"
-export node07="k8s-node07"
-export node08="k8s-node08"
-export node09="k8s-node09"
-export node10="k8s-node10"
-export node11="k8s-node11"
-export node12="k8s-node12"
-export node13="k8s-node13"
-export node14="k8s-node14"
-export node15="k8s-node15"
 export lb01="lb01"
 export lb02="lb02"
 
 
-export IP="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 k8s-node06 k8s-node07 k8s-node08 k8s-node09 k8s-node10 k8s-node11 k8s-node12 k8s-node13 k8s-node14 k8s-node15 lb01 lb02"
-export other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 k8s-node06 k8s-node07 k8s-node08 k8s-node09 k8s-node10 k8s-node11 k8s-node12 k8s-node13 k8s-node14 k8s-node15 lb01 lb02"
-export k8s_other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 k8s-node06 k8s-node07 k8s-node08 k8s-node09 k8s-node10 k8s-node11 k8s-node12 k8s-node13 k8s-node14 k8s-node15"
-export k8s="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 k8s-node06 k8s-node07 k8s-node08 k8s-node09 k8s-node10 k8s-node11 k8s-node12 k8s-node13 k8s-node14 k8s-node15"
+export IP="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 lb01 lb02"
+export other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 lb01 lb02"
+export k8s_other="k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 "
+export k8s="k8s-master01 k8s-master02 k8s-master03 k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 "
 export Master='k8s-master01 k8s-master02 k8s-master03'
-export Work='k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05 k8s-node06 k8s-node07 k8s-node08 k8s-node09 k8s-node10 k8s-node11 k8s-node12 k8s-node13 k8s-node14 k8s-node15'
+export Work='k8s-node01 k8s-node02 k8s-node03 k8s-node04 k8s-node05'
 export lb='lb01 lb02'
 
-export filesize=$(ls -l Kubernetes.tar | awk '{ print $5 }')
 
 
 function ping_test() {
@@ -117,16 +100,6 @@ $k8s_node02 k8s-node02
 $k8s_node03 k8s-node03
 $k8s_node04 k8s-node04
 $k8s_node05 k8s-node05
-$k8s_node06 k8s-node06
-$k8s_node07 k8s-node07
-$k8s_node08 k8s-node08
-$k8s_node09 k8s-node09
-$k8s_node10 k8s-node10
-$k8s_node11 k8s-node11
-$k8s_node12 k8s-node12
-$k8s_node13 k8s-node13
-$k8s_node14 k8s-node14
-$k8s_node15 k8s-node15
 $lb_01 lb01
 $lb_02 lb02
 $lb_vip lb-vip
@@ -192,16 +165,6 @@ $k8s_node02 k8s-node02
 $k8s_node03 k8s-node03
 $k8s_node04 k8s-node04
 $k8s_node05 k8s-node05
-$k8s_node06 k8s-node06
-$k8s_node07 k8s-node07
-$k8s_node08 k8s-node08
-$k8s_node09 k8s-node09
-$k8s_node10 k8s-node10
-$k8s_node11 k8s-node11
-$k8s_node12 k8s-node12
-$k8s_node13 k8s-node13
-$k8s_node14 k8s-node14
-$k8s_node15 k8s-node15
 $lb_01 lb01
 $lb_02 lb02
 $lb_vip lb-vip
@@ -401,8 +364,6 @@ done
 
 }
 
-
-
 function init_local(){
 
 for HOST in $k8s;do
@@ -416,29 +377,31 @@ for HOST in $k8s;do
 done
 
 
-if [ -f "Kubernetes.tar" ]; then
+export filesize=$(ls -l $fille_name.tar | awk '{ print $5 }')
+
+if [ -f "$fille_name.tar" ]; then
+echo "所需程序已存在"
+if (( $filesize == 649707520 && $filesize == 618649895 && $filesize == 618977191)); then
+    echo "下载所需程序"
+    rm -f $fille_name.tar
+    wget $version
+else
     echo "所需程序已存在"
-    if (( $filesize != 649707520 )); then
-        echo "下载所需程序"
-        rm -f Kubernetes.tar
-        wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
-    else
-        echo "所需程序已存在"
-    fi
+fi
 else
     echo "下载所需程序"
-    wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
+    wget $version
 fi
 
 
 echo "解压安装包"
 
-tar xf Kubernetes.tar
-scp -r Kubernetes  root@$master01:
+tar xf $fille_name.tar
+scp -r $fille_name  root@$master01:
 
 echo "配置证书工具"
 
-cd Kubernetes/cby/ || exit
+cd $fille_name/cby/ || exit
 cp cfssl_1.6.1_linux_amd64  /usr/local/bin/cfssl
 cp cfssljson_1.6.1_linux_amd64 /usr/local/bin/cfssljson
 chmod +x  /usr/local/bin/cfssljson  /usr/local/bin/cfssl
@@ -1205,7 +1168,7 @@ for HOST in $master01;do
     scp /root/.ssh/id_rsa.pub  root@$HOST:/root/.ssh/id_rsa.pub
 
     echo "配置主机$HOST kubelet"
-    ssh root@"$HOST" "cd /root/Kubernetes/bootstrap ; kubectl config set-cluster kubernetes     --certificate-authority=/etc/kubernetes/pki/ca.pem     --embed-certs=true     --server=https://$lb_vip:8443     --kubeconfig=/etc/kubernetes/bootstrap-kubelet.kubeconfig ; kubectl config set-credentials tls-bootstrap-token-user     --token=c8ad9c.2e4d610cf3e7426e --kubeconfig=/etc/kubernetes/bootstrap-kubelet.kubeconfig ; kubectl config set-context tls-bootstrap-token-user@kubernetes     --cluster=kubernetes     --user=tls-bootstrap-token-user     --kubeconfig=/etc/kubernetes/bootstrap-kubelet.kubeconfig ;kubectl config use-context tls-bootstrap-token-user@kubernetes     --kubeconfig=/etc/kubernetes/bootstrap-kubelet.kubeconfig ;mkdir -p /root/.kube ; cp /etc/kubernetes/admin.kubeconfig /root/.kube/config "
+    ssh root@"$HOST" "cd /root/$fille_name/bootstrap ; kubectl config set-cluster kubernetes     --certificate-authority=/etc/kubernetes/pki/ca.pem     --embed-certs=true     --server=https://$lb_vip:8443     --kubeconfig=/etc/kubernetes/bootstrap-kubelet.kubeconfig ; kubectl config set-credentials tls-bootstrap-token-user     --token=c8ad9c.2e4d610cf3e7426e --kubeconfig=/etc/kubernetes/bootstrap-kubelet.kubeconfig ; kubectl config set-context tls-bootstrap-token-user@kubernetes     --cluster=kubernetes     --user=tls-bootstrap-token-user     --kubeconfig=/etc/kubernetes/bootstrap-kubelet.kubeconfig ;kubectl config use-context tls-bootstrap-token-user@kubernetes     --kubeconfig=/etc/kubernetes/bootstrap-kubelet.kubeconfig ;mkdir -p /root/.kube ; cp /etc/kubernetes/admin.kubeconfig /root/.kube/config "
 
 cat > 1.sh << EOF 
 cd /etc/kubernetes/
@@ -1222,7 +1185,7 @@ scp 1.sh root@$HOST:
 ssh root@"$HOST" "bash -x /root/1.sh" 
 
 echo "kubectl get 测试"
-ssh root@"$HOST" "kubectl get cs ; kubectl create -f /root/Kubernetes/bootstrap/bootstrap.secret.yaml"
+ssh root@"$HOST" "kubectl get cs ; kubectl create -f /root/$fille_name/bootstrap/bootstrap.secret.yaml"
 
 } >> "$HOST".txt
 done
@@ -1249,6 +1212,7 @@ for HOST in $k8s;do
 
 cat > 4.sh << EOF 
 containerd  config default > /etc/containerd/config.toml
+sed -i "s#SystemdCgroup\ \=\ false#SystemdCgroup\ \=\ true#g" /etc/containerd/config.toml
 sed -i "s#k8s.gcr.io/pause:3.2#registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.6#g" /etc/containerd/config.toml
 systemctl  restart containerd
 EOF
@@ -1388,7 +1352,7 @@ for HOST in $master01;do
 {
 echo "配置主机$HOST kube-proxy"
 cat > 2.sh << EOF 
-cd /root/Kubernetes/
+cd /root/$fille_name/
 kubectl -n kube-system create serviceaccount kube-proxy
 
 kubectl create clusterrolebinding system:kube-proxy         --clusterrole system:node-proxier         --serviceaccount kube-system:kube-proxy
@@ -1498,7 +1462,7 @@ for HOST in $master01;do
 
 echo "配置$HOST calico"
 cat > 3.sh << EOF 
-cd /root/Kubernetes/calico/
+cd /root/$fille_name/calico/
 sed -i "s#POD_CIDR#172.16.0.0/12#g" calico.yaml
 kubectl apply -f calico.yaml
 EOF
@@ -1515,7 +1479,7 @@ for HOST in $master01;do
 
 echo "配置$HOST CoreDNS"
 cat > 5.sh << EOF 
-cd /root/Kubernetes/CoreDNS/
+cd /root/$fille_name/CoreDNS/
 sed -i "s#KUBEDNS_SERVICE_IP#10.96.0.10#g" coredns.yaml
 kubectl  apply -f coredns.yaml
 EOF
@@ -1534,7 +1498,7 @@ for HOST in $master01;do
 
 echo "配置$HOST metrics-server"
 cat > 6.sh << EOF 
-cd /root/Kubernetes/metrics-server/
+cd /root/$fille_name/metrics-server/
 kubectl  apply -f .
 EOF
 
@@ -1552,7 +1516,7 @@ for HOST in $master01;do
 
 echo "配置$HOST dashboard"
 cat > 7.sh << EOF 
-cd /root/Kubernetes/dashboard/
+cd /root/$fille_name/dashboard/
 kubectl  apply -f dashboard-user.yaml
 kubectl  apply -f dashboard.yaml
 kubectl apply -f admin.yaml -n kube-system
@@ -1592,6 +1556,59 @@ done
 }
 
 
+function menu() {
+    clear
+    echo "#####################################################################"
+    echo -e "#           ${RED}kubernetes一键安装脚本${PLAIN}                   #"
+    echo -e "# ${GREEN}作者${PLAIN}: chenby                                   #"
+    echo -e "# ${GREEN}网址${PLAIN}: https://www.oiox.cn                      #"
+    echo -e "# ${GREEN}版本${PLAIN}: 选择kubernetes安装版本                     #"
+    echo -e "# ${GREEN}说明${PLAIN}: 选择kubernetes安装版本                     #"
+    echo -e "#                                                                #"
+    echo -e "# 该脚本示例需要十一台服务器，在十一台服务器中有一台是用于执行该脚本的      #"
+    echo -e "# 另外有八台k8s服务器，其他俩台作为lb负载均衡服务器。                   #"
+    echo -e "# 将其中服务器配置好静态IP，修改如下变量中的IP即可。                    #"
+    echo -e "# 同时查看服务器中的网卡名，并将其修改。                               #"
+    echo -e "#                                                               #"
+    echo -e "# 执行脚本可使用bash -x 即可显示执行中详细信息。                      #"
+    echo -e "# 该脚本已适配centos7和centos8。                                  #"
+    echo -e "# 脚本中hosts有俩处，记得修改。                                     #"
+    echo "####################################################################"
+    echo " -------------"
+    echo -e "  ${GREEN}1.${PLAIN}  v1.23.3"
+    echo " -------------"
+    echo -e "  ${GREEN}2.${PLAIN}  v1.23.4"
+    echo " -------------"
+    echo -e "  ${GREEN}3.${PLAIN}  v1.23.5"
+    echo " -------------"
+    echo -e "  ${GREEN}0.${PLAIN}   退出"
+    echo 
+
+    read -p " 请选择操作[0-3]：" chenby
+    case $chenby in
+        0)
+            exit 0
+            ;;
+        1)
+            version="https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar"
+            fille_name="Kubernetes"
+            ;;
+        2)
+            version="https://github.com/cby-chen/Kubernetes/releases/download/v1.23.4/kubernetes-v1.23.4.tar"
+            fille_name="kubernetes-v1.23.4"
+            ;;
+        3)
+            version="https://github.com/cby-chen/Kubernetes/releases/download/v1.23.5/kubernetes-v1.23.5.tar"
+            fille_name="kubernetes-v1.23.5"
+            ;;
+        *)
+            colorEcho $RED " 请选择正确的操作！"
+            exit 1
+            ;;
+    esac
+}
+
+menu
 set_local
 init_all
 Containerd
