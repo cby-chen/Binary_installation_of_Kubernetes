@@ -178,7 +178,7 @@ ssh root@$HOST "systemctl disable --now firewalld"
 echo "关闭$HOST selinux"
 
 ssh root@$HOST "setenforce 0"
-ssh root@$HOST "sed -i 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/sysconfig/selinux"
+ssh root@$HOST "sed -i 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/selinux/config"
 
 
 echo "关闭$HOST swa分区"
@@ -702,7 +702,7 @@ for HOST in $lb;do
 
     echo "配置主机$HOST selinux"
     ssh root@"$HOST" "setenforce 0"
-    ssh root@"$HOST" "sed -i 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/sysconfig/selinux"
+    ssh root@"$HOST" "sed -i 's#SELINUX=enforcing#SELINUX=disabled#g' /etc/selinux/config"
 
     echo "配置主机$HOST 软件"
     ssh root@"$HOST" "yum -y install keepalived haproxy"
