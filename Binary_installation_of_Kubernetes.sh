@@ -87,6 +87,14 @@ function os() {
 
 function set_local() {
 
+os
+
+if [ $? == 0 ]; then
+    echo "sshpass安装成功"
+else
+    echo '安装失败请检查安装机的安装源'
+fi
+
 echo "本机写入hosts配置文件..."
 
 cat > /etc/hosts <<EOF
@@ -105,17 +113,7 @@ $lb_02 lb02
 $lb_vip lb-vip
 EOF
 
-
 echo "本机配置ssh免密..."
-
-
-os
-
-if [ $? == 0 ]; then
-    echo "sshpass安装成功"
-else
-    echo '安装失败请检查安装机的安装源'
-fi
 
 rm -f /root/.ssh/id_rsa 
 ssh-keygen -f /root/.ssh/id_rsa -P ''
