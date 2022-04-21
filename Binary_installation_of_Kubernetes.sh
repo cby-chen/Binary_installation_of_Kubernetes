@@ -16,17 +16,17 @@
 ### 
 
 #每个节点的IP
-export k8s_master01="192.168.1.61"
-export k8s_master02="192.168.1.62"
-export k8s_master03="192.168.1.63"
-export k8s_node01="192.168.1.64"
-export k8s_node02="192.168.1.65"
-export k8s_node03="192.168.1.66"
-export k8s_node04="192.168.1.67"
-export k8s_node05="192.168.1.68"
-export lb_01="192.168.1.57"
-export lb_02="192.168.1.58"
-export lb_vip="192.168.1.59"
+export k8s_master01="192.168.1.81"
+export k8s_master02="192.168.1.82"
+export k8s_master03="192.168.1.83"
+export k8s_node01="192.168.1.84"
+export k8s_node02="192.168.1.85"
+export k8s_node03="192.168.1.86"
+export k8s_node04="192.168.1.87"
+export k8s_node05="192.168.1.88"
+export lb_01="192.168.1.80"
+export lb_02="192.168.1.90"
+export lb_vip="192.168.1.89"
 
 #物理网络ip地址段
 export ip_segment="192.168.1.0\/24"
@@ -135,7 +135,7 @@ ssh root@$HOST "sed -e 's|^mirrorlist=|#mirrorlist=|g' -e 's|^#baseurl=http://mi
 
 echo "安装$HOST 基础环境"
 
-ssh root@$HOST "yum update -y ; yum -y install wget jq psmisc vim net-tools  telnet yum-utils device-mapper-persistent-data lvm2 git network-scripts tar curl chrony -y"
+ssh root@$HOST "yum update -y ; yum -y install wget jq psmisc vim net-tools nfs-utils telnet yum-utils device-mapper-persistent-data lvm2 git network-scripts tar curl chrony -y"
 ssh root@$HOST "yum install epel* -y"
 wait
 }   >> $HOST.txt &
@@ -357,8 +357,9 @@ image-endpoint: unix:///run/containerd/containerd.sock
 timeout: 10
 debug: false
 EOF"
-} >> $HOST.txt
+} >> $HOST.txt &
 done
+wait
 
 }
 
@@ -407,7 +408,7 @@ chmod +x  /usr/local/bin/cfssljson  /usr/local/bin/cfssl
 echo "拷贝所需程序包"
 
 tar -xf kubernetes-server-linux-amd64.tar.gz  --strip-components=3 -C /usr/local/bin kubernetes/server/bin/kube{let,ctl,-apiserver,-controller-manager,-scheduler,-proxy}
-tar -xf etcd-v3.5.2-linux-amd64.tar.gz --strip-components=1 -C /usr/local/bin etcd-v3.5.2-linux-amd64/etcd{,ctl}
+tar -xf etcd-v3.5.3-linux-amd64.tar.gz --strip-components=1 -C /usr/local/bin etcd-v3.5.3-linux-amd64/etcd{,ctl}
 
 echo "将所需组件发送到k8s节点"
 for NODE in $Master; do echo "$NODE"; scp /usr/local/bin/kube{let,ctl,-apiserver,-controller-manager,-scheduler,-proxy} "$NODE":/usr/local/bin/; scp /usr/local/bin/etcd* $NODE:/usr/local/bin/; done
@@ -1531,6 +1532,103 @@ ssh root@"$HOST" "bash -x /root/7.sh"
 done
 
 
+for HOST in $k8s ;do
+{
+cat << EOF > login-info.sh
+#!/bin/sh
+#
+# @Time    : 2022-04-21
+# @Author  : chenby
+# @Desc    : ssh login banner
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+shopt -q login_shell && : || return 0
+echo -e "\033[0;32m
+ ██╗  ██╗ █████╗ ███████╗
+ ██║ ██╔╝██╔══██╗██╔════╝
+ █████╔╝ ╚█████╔╝███████╗
+ ██╔═██╗ ██╔══██╗╚════██║
+ ██║  ██╗╚█████╔╝███████║
+ ╚═╝  ╚═╝ ╚════╝ ╚══════ by chenby\033[0m"
+# os
+upSeconds="\$(cut -d. -f1 /proc/uptime)"
+secs=\$((\${upSeconds}%60))
+mins=\$((\${upSeconds}/60%60))
+hours=\$((\${upSeconds}/3600%24))
+days=\$((\${upSeconds}/86400))
+UPTIME_INFO=\$(printf "%d days, %02dh %02dm %02ds" "\$days" "\$hours" "\$mins" "\$secs")
+if [ -f /etc/redhat-release ] ; then
+    PRETTY_NAME=\$(< /etc/redhat-release)
+elif [ -f /etc/debian_version ]; then
+   DIST_VER=\$(</etc/debian_version)
+   PRETTY_NAME="\$(grep PRETTY_NAME /etc/os-release | sed -e 's/PRETTY_NAME=//g' -e  's/"//g') (\$DIST_VER)"
+else
+    PRETTY_NAME=\$(cat /etc/*-release | grep "PRETTY_NAME" | sed -e 's/PRETTY_NAME=//g' -e 's/"//g')
+fi
+if [[ -d "/system/app/" && -d "/system/priv-app" ]]; then
+    model="\$(getprop ro.product.brand) \$(getprop ro.product.model)"
+elif [[ -f /sys/devices/virtual/dmi/id/product_name ||
+        -f /sys/devices/virtual/dmi/id/product_version ]]; then
+    model="\$(< /sys/devices/virtual/dmi/id/product_name)"
+    model+=" \$(< /sys/devices/virtual/dmi/id/product_version)"
+elif [[ -f /sys/firmware/devicetree/base/model ]]; then
+    model="\$(< /sys/firmware/devicetree/base/model)"
+elif [[ -f /tmp/sysinfo/model ]]; then
+    model="\$(< /tmp/sysinfo/model)"
+fi
+MODEL_INFO=\${model}
+KERNEL=\$(uname -srmo)
+USER_NUM=\$(who -u | wc -l)
+RUNNING=\$(ps ax | wc -l | tr -d " ")
+# disk
+totaldisk=\$(df -h -x devtmpfs -x tmpfs -x debugfs -x aufs -x overlay --total 2>/dev/null | tail -1)
+disktotal=\$(awk '{print \$2}' <<< "\${totaldisk}")
+diskused=\$(awk '{print \$3}' <<< "\${totaldisk}")
+diskusedper=\$(awk '{print \$5}' <<< "\${totaldisk}")
+DISK_INFO="\033[0;33m\${diskused}\033[0m of \033[1;34m\${disktotal}\033[0m disk space used (\033[0;33m\${diskusedper}\033[0m)"
+# cpu
+cpu=\$(awk -F':' '/^model name/ {print \$2}' /proc/cpuinfo | uniq | sed -e 's/^[ \t]*//')
+cpun=\$(grep -c '^processor' /proc/cpuinfo)
+cpuc=\$(grep '^cpu cores' /proc/cpuinfo | tail -1 | awk '{print \$4}')
+cpup=\$(grep '^physical id' /proc/cpuinfo | wc -l)
+CPU_INFO="\${cpu} \${cpup}P \${cpuc}C \${cpun}L"
+# get the load averages
+read one five fifteen rest < /proc/loadavg
+LOADAVG_INFO="\033[0;33m\${one}\033[0m / \${five} / \${fifteen} with \033[1;34m\$(( cpun*cpuc ))\033[0m core(s) at \033[1;34m\$(grep '^cpu MHz' /proc/cpuinfo | tail -1 | awk '{print \$4}')\033 MHz"
+# mem
+MEM_INFO="\$(cat /proc/meminfo | awk '/MemTotal:/{total=\$2/1024/1024;next} /MemAvailable:/{use=total-\$2/1024/1024; printf("\033[0;33m%.2fGiB\033[0m of \033[1;34m%.2fGiB\033[0m RAM used (\033[0;33m%.2f%%\033[0m)",use,total,(use/total)*100);}')"
+# network
+# extranet_ip=" and \$(curl -s ip.cip.cc)"
+IP_INFO="\$(ip a | grep glo | awk '{print \$2}' | head -1 | cut -f1 -d/)\${extranet_ip:-}"
+# Container info
+CONTAINER_INFO="\$(sudo /usr/bin/crictl ps -a -o yaml 2> /dev/null | awk '/^  state: /{gsub("CONTAINER_", "", \$NF) ++S[\$NF]}END{for(m in S) printf "%s%s:%s ",substr(m,1,1),tolower(substr(m,2)),S[m]}')Images:\$(sudo /usr/bin/crictl images -q 2> /dev/null | wc -l)"
+# info
+echo -e "
+ Information as of: \033[1;34m\$(date +"%Y-%m-%d %T")\033[0m
+ 
+ \033[0;1;31mProduct\033[0m............: \${MODEL_INFO}
+ \033[0;1;31mOS\033[0m.................: \${PRETTY_NAME}
+ \033[0;1;31mKernel\033[0m.............: \${KERNEL}
+ \033[0;1;31mCPU\033[0m................: \${CPU_INFO}
+ \033[0;1;31mHostname\033[0m...........: \033[1;34m\$(hostname)\033[0m
+ \033[0;1;31mIP Addresses\033[0m.......: \033[1;34m\${IP_INFO}\033[0m
+ \033[0;1;31mUptime\033[0m.............: \033[0;33m\${UPTIME_INFO}\033[0m
+ \033[0;1;31mMemory\033[0m.............: \${MEM_INFO}
+ \033[0;1;31mLoad Averages\033[0m......: \${LOADAVG_INFO}
+ \033[0;1;31mDisk Usage\033[0m.........: \${DISK_INFO} 
+ \033[0;1;31mUsers online\033[0m.......: \033[1;34m\${USER_NUM}\033[0m
+ \033[0;1;31mRunning Processes\033[0m..: \033[1;34m\${RUNNING}\033[0m
+ \033[0;1;31mContainer Info\033[0m.....: \${CONTAINER_INFO}
+"
+EOF
+
+scp login-info.sh root@$HOST:/etc/profile.d/
+
+echo "配置$HOST 登陆环境信息"
+
+} >> "$HOST".txt
+done
+
+
 for HOST in $master01;do
 {
 
@@ -1545,7 +1643,6 @@ EOF
 scp 8.sh root@$HOST:
 
 ssh root@"$HOST" "bash -x /root/8.sh" 
-
 
 } >> "$HOST".txt
 done
@@ -1579,10 +1676,12 @@ function menu() {
     echo " -------------"
     echo -e "  ${GREEN}3.${PLAIN}  v1.23.5"
     echo " -------------"
+    echo -e "  ${GREEN}4.${PLAIN}  v1.23.6"
+    echo " -------------"
     echo -e "  ${GREEN}0.${PLAIN}   退出"
     echo 
 
-    read -p " 请选择操作[0-3]：" chenby
+    read -p " 请选择操作[0-4]：" chenby
     case $chenby in
         0)
             exit 0
@@ -1598,6 +1697,10 @@ function menu() {
         3)
             version="https://github.com/cby-chen/Kubernetes/releases/download/v1.23.5/kubernetes-v1.23.5.tar"
             fille_name="kubernetes-v1.23.5"
+            ;;
+        4)
+            version="https://github.com/cby-chen/Kubernetes/releases/download/v1.23.6/kubernetes-v1.23.6.tar"
+            fille_name="kubernetes-v1.23.6"
             ;;
         *)
             colorEcho $RED " 请选择正确的操作！"
