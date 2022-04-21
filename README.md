@@ -18,7 +18,7 @@
 
   
 
-当前脚本中引用的Kubernetes二进制包是v1.23.3 v1.23.4 v1.23.5
+当前脚本中引用的Kubernetes二进制包是v1.23.3 v1.23.4 v1.23.5 v1.23.6
 
   
 
@@ -28,17 +28,17 @@
 
 | 主机名称 | IP地址 | 说明 | 软件 |
 | --- | --- | --- | --- |
-| Master01 | 192.168.1.61 | master节点 | kube-apiserver、kube-controller-manager、kube-scheduler、etcd、kubelet、kube-proxy、nfs-client |
-| Master02 | 192.168.1.62 | master节点 | kube-apiserver、kube-controller-manager、kube-scheduler、etcd、kubelet、kube-proxy、nfs-client |
-| Master03 | 192.168.1.63 | master节点 | kube-apiserver、kube-controller-manager、kube-scheduler、etcd、kubelet、kube-proxy、nfs-client |
-| Node01 | 192.168.1.64 | node节点 | kubelet、kube-proxy、nfs-client |
-| Node02 | 192.168.1.65 | node节点 | kubelet、kube-proxy、nfs-client |
-| Node03 | 192.168.1.66 | node节点 | kubelet、kube-proxy、nfs-client |
-| Node04 | 192.168.1.67 | node节点 | kubelet、kube-proxy、nfs-client |
-| Node05 | 192.168.1.68 | node节点 | kubelet、kube-proxy、nfs-client |
-| Lb01 | 192.168.1.56 | node节点 | kubelet、kube-proxy、nfs-client |
-| Lb02 | 192.168.1.57 | node节点 | kubelet、kube-proxy、nfs-client |
-|  | 192.168.1.58 | vip |  |
+| Master01 | 192.168.1.81 | master节点 | kube-apiserver、kube-controller-manager、kube-scheduler、etcd、kubelet、kube-proxy、nfs-client |
+| Master02 | 192.168.1.82 | master节点 | kube-apiserver、kube-controller-manager、kube-scheduler、etcd、kubelet、kube-proxy、nfs-client |
+| Master03 | 192.168.1.83 | master节点 | kube-apiserver、kube-controller-manager、kube-scheduler、etcd、kubelet、kube-proxy、nfs-client |
+| Node01 | 192.168.1.84 | node节点 | kubelet、kube-proxy、nfs-client |
+| Node02 | 192.168.1.85 | node节点 | kubelet、kube-proxy、nfs-client |
+| Node03 | 192.168.1.86 | node节点 | kubelet、kube-proxy、nfs-client |
+| Node04 | 192.168.1.87 | node节点 | kubelet、kube-proxy、nfs-client |
+| Node05 | 192.168.1.88 | node节点 | kubelet、kube-proxy、nfs-client |
+| Lb01 | 192.168.1.80 | node节点 | kubelet、kube-proxy、nfs-client |
+| Lb02 | 192.168.1.90 | node节点 | kubelet、kube-proxy、nfs-client |
+|  | 192.168.1.89 | vip |  |
 | cby | 192.168.1.60 | 执行脚本节点 | bash |
 
 
@@ -48,7 +48,9 @@
 
 微信：15648907522
 
-项目地址：https://github.com/cby-chen/Binary_installation_of_Kubernetes
+脚本项目地址：https://github.com/cby-chen/Binary_installation_of_Kubernetes
+
+手动项目地址：https://github.com/cby-chen/Kubernetes
 
 使用说明：
 该脚本示例需要十一台服务器，在十一台服务器中有一台是用于执行该脚本的，
@@ -64,6 +66,12 @@
 该脚本已适配centos7和centos8。
 
 脚本中hosts有俩处，记得修改。
+
+在执行过程中，新开窗口输入 
+
+tail -f *.txt 
+
+可以查看到具体信息
 
 ------
 2022-03更新：
@@ -93,7 +101,11 @@
 
 修复 selinux 关闭异常
 
+------
 
+
+2022-04-21更新：
+新增v1.23.6 并修复BUG
 
 ------
 
@@ -105,10 +117,12 @@
 wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
 wget https://github.com/cby-chen/Kubernetes/releases/download/v1.23.4/kubernetes-v1.23.4.tar
 wget https://github.com/cby-chen/Kubernetes/releases/download/v1.23.5/kubernetes-v1.23.5.tar
+wget https://github.com/cby-chen/Kubernetes/releases/download/v1.23.6/kubernetes-v1.23.6.tar
 
 下载脚本
 
 wget https://www.oiox.cn/Binary_installation_of_Kubernetes.sh
+
 
 修改参数
 
