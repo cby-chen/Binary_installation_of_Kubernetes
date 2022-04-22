@@ -1532,19 +1532,6 @@ ssh root@"$HOST" "bash -x /root/7.sh"
 done
 
 
-
-for HOST in $master01;do
-{
-
-echo "配置$HOST Prometheus + Grafana"
-
-ssh root@"$HOST" "cd /root ; git clone -b release-0.10 https://github.com/prometheus-operator/kube-prometheus.git ;cd kube-prometheus/manifests ;sed -i "s#quay.io/prometheus/#registry.cn-hangzhou.aliyuncs.com/chenby/#g" *.yaml ;sed -i "s#quay.io/brancz/#registry.cn-hangzhou.aliyuncs.com/chenby/#g" *.yaml ;sed -i "s#k8s.gcr.io/prometheus-adapter/#registry.cn-hangzhou.aliyuncs.com/chenby/#g" *.yaml ;sed -i "s#quay.io/prometheus-operator/#registry.cn-hangzhou.aliyuncs.com/chenby/#g" *.yaml ;sed -i "s#k8s.gcr.io/kube-state-metrics/#registry.cn-hangzhou.aliyuncs.com/chenby/#g" *.yaml ;sed -i  "/ports:/i\  type: NodePort" grafana-service.yaml ;sed -i  "/targetPort: http/i\    nodePort: 31100" grafana-service.yaml ;sed -i  "/ports:/i\  type: NodePort" prometheus-service.yaml ;sed -i  "/targetPort: web/i\    nodePort: 31200" prometheus-service.yaml ;sed -i  "/targetPort: reloader-web/i\    nodePort: 31300" prometheus-service.yaml ;sed -i  "/ports:/i\  type: NodePort" alertmanager-service.yaml  ;sed -i  "/targetPort: web/i\    nodePort: 31400" alertmanager-service.yaml  ;sed -i  "/targetPort: reloader-web/i\    nodePort: 31500" alertmanager-service.yaml  ;kubectl create -f /root/kube-prometheus/manifests/setup ;kubectl create -f /root/kube-prometheus/manifests/ ; sleep 30 ; kubectl  get pod -n monitoring  ; kubectl  get svc -n monitoring  ;" 
-
-
-} >> "$HOST".txt
-done
-
-
 for HOST in $k8s ;do
 {
 cat << EOF > login-info.sh
