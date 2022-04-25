@@ -339,7 +339,7 @@ ssh root@$HOST "yum makecache"
 ssh root@$HOST "yum -y install docker-ce"
 ssh root@$HOST "systemctl  enable --now docker"
 
-}   >> $HOST.txt 
+}   >> $HOST.txt &
 done
 wait 
 
