@@ -87,7 +87,15 @@ function os() {
 
 function set_local() {
 
-os
+os=$(cat /etc/os-release 2>/dev/null | grep ^ID= | awk -F= '{print $2}')
+if [ "$os" = "\"centos\"" ]; then
+   yum update ; yum install -y sshpass
+fi
+if [ ! "$os" = "ubuntu" ]; then
+   apt update ; apt install -y sshpass
+fi
+
+echo $os
 
 if [ $? == 0 ]; then
     echo "sshpass安装成功"
