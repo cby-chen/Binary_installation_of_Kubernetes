@@ -1222,7 +1222,7 @@ for HOST in $k8s;do
 cat > 4.sh << EOF 
 containerd  config default > /etc/containerd/config.toml
 sed -i "s#SystemdCgroup\ \=\ false#SystemdCgroup\ \=\ true#g" /etc/containerd/config.toml
-sed -i "s#k8s.gcr.io/pause:3.2#registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.6#g" /etc/containerd/config.toml
+sed -i "s#k8s.gcr.io#registry.cn-hangzhou.aliyuncs.com/chenby#g" /etc/containerd/config.toml
 systemctl  restart containerd
 EOF
 
