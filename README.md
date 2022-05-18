@@ -127,6 +127,11 @@ wget https://github.com/cby-chen/Kubernetes/releases/download/v1.23.6/kubernetes
 
 下载脚本
 
+备用1
+wget https://raw.githubusercontent.com/cby-chen/Binary_installation_of_Kubernetes/main/Binary_installation_of_Kubernetes.sh
+备用2
+wget "https://cdn.jsdelivr.net/gh/cby-chen/Binary_installation_of_Kubernetes@master/Binary_installation_of_Kubernetes.sh"
+备用3
 wget https://www.oiox.cn/Binary_installation_of_Kubernetes.sh
 
 
