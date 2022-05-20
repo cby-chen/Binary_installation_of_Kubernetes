@@ -1,8 +1,3 @@
-  
-
-**背景**，最近几天闲着研究Kubernetes，发现使用手动二进制安装会有些繁琐。经过突发奇想，就出现这个脚本。
-
-
 # 手动部署：https://github.com/cby-chen/Kubernetes
 
 
