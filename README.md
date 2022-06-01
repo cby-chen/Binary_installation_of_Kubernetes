@@ -189,7 +189,12 @@ dashboard
 kubectl get svc kubernetes-dashboard -n kubernetes-dashboard
 
 查看token
+
+1.23：
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+
+1.24：
+kubectl -n kubernetes-dashboard create token admin-user
 
 ```
 
