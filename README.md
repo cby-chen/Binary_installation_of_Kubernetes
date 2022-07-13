@@ -112,19 +112,26 @@ tail -f *.txt
 
 手动提前下载好
 
-wget https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
-wget https://github.com/cby-chen/Kubernetes/releases/download/v1.23.4/kubernetes-v1.23.4.tar
-wget https://github.com/cby-chen/Kubernetes/releases/download/v1.23.5/kubernetes-v1.23.5.tar
-wget https://github.com/cby-chen/Kubernetes/releases/download/v1.23.6/kubernetes-v1.23.6.tar
+wget  https://ghproxy.com/https://github.com/cby-chen/Kubernetes/releases/download/cby/Kubernetes.tar
+wget  https://ghproxy.com/https://github.com/cby-chen/Kubernetes/releases/download/v1.23.4/kubernetes-v1.23.4.tar
+wget  https://ghproxy.com/https://github.com/cby-chen/Kubernetes/releases/download/v1.23.5/kubernetes-v1.23.5.tar
+wget  https://ghproxy.com/https://github.com/cby-chen/Kubernetes/releases/download/v1.23.6/kubernetes-v1.23.6.tar
+
+wget  https://ghproxy.com/https://github.com/cby-chen/Kubernetes/releases/download/v1.24.0/kubernetes-v1.24.0.tar
+wget  https://ghproxy.com/https://github.com/cby-chen/Kubernetes/releases/download/v1.24.1/kubernetes-v1.24.1.tar
+wget  https://ghproxy.com/https://github.com/cby-chen/Kubernetes/releases/download/v1.24.2/kubernetes-v1.24.2.tar
 
 下载脚本
 
 备用1
-wget https://raw.githubusercontent.com/cby-chen/Binary_installation_of_Kubernetes/main/Binary_installation_of_Kubernetes.sh
+wget https://raw.githubusercontent.com/cby-chen/Binary_installation_of_Kubernetes/main/Binary_installation_of_Kubernetes_v1.23.sh
+wget https://raw.githubusercontent.com/cby-chen/Binary_installation_of_Kubernetes/main/Binary_installation_of_Kubernetes_v1.24.sh
 备用2
-wget "https://cdn.jsdelivr.net/gh/cby-chen/Binary_installation_of_Kubernetes@master/Binary_installation_of_Kubernetes.sh"
+wget "https://cdn.jsdelivr.net/gh/cby-chen/Binary_installation_of_Kubernetes@master/Binary_installation_of_Kubernetes_v1.23.sh"
+wget "https://cdn.jsdelivr.net/gh/cby-chen/Binary_installation_of_Kubernetes@master/Binary_installation_of_Kubernetes_v1.24.sh"
 备用3
-wget https://www.oiox.cn/Binary_installation_of_Kubernetes.sh
+wget https://www.oiox.cn/Binary_installation_of_Kubernetes_v1.23.sh
+wget https://www.oiox.cn/Binary_installation_of_Kubernetes_v1.24.sh
 
 
 修改参数
