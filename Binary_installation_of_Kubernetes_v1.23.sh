@@ -690,9 +690,7 @@ Alias=etcd3.service
 EOF"
 
     echo "测试$HOST etcd"
-    ssh root@"$HOST" "mkdir /etc/kubernetes/pki/etcd ; ln -s /etc/etcd/ssl/* /etc/kubernetes/pki/etcd/ ; systemctl daemon-reload ; systemctl enable --now etcd"
-    ssh root@"$HOST" "export ETCDCTL_API=3 ; etcdctl --endpoints="$k8s_master01:2379,$k8s_master02:2379,$k8s_master03:2379" --cacert=/etc/kubernetes/pki/etcd/etcd-ca.pem --cert=/etc/kubernetes/pki/etcd/etcd.pem --key=/etc/kubernetes/pki/etcd/etcd-key.pem  endpoint status --write-out=table"
-
+    ssh root@"$HOST" "mkdir /etc/kubernetes/pki/etcd ; ln -s /etc/etcd/ssl/* /etc/kubernetes/pki/etcd/ ; systemctl daemon-reload ; systemctl enable etcd ; systemctl start etcd"
 } >> "$HOST".txt
 done
 
