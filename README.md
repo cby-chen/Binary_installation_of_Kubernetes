@@ -13,11 +13,8 @@
 
   
 
-当前脚本中引用的Kubernetes二进制包是v1.23.3 v1.23.4 v1.23.5 v1.23.6
+当前脚本中引用的Kubernetes二进制包是v1.23.3 v1.23.4 v1.23.5 v1.23.6. v1.24.0 v1.24.1 v1.24.2
 
-  
-
-![图片](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/31d5ac532dde4228996cc7404e4ec823~tplv-k3u1fbpfcp-zoom-1.image)
 
   
 
@@ -48,9 +45,9 @@
 手动项目地址：https://github.com/cby-chen/Kubernetes
 
 使用说明：
-该脚本示例需要十一台服务器，在十一台服务器中有一台是用于执行该脚本的，
+该脚本示例需要八台服务器，在八台服务器中有一台是用于执行该脚本的，
 
-另外有八台k8s服务器，其他俩台作为lb负载均衡服务器。
+另外有六台k8s服务器，其他俩台作为lb负载均衡服务器。
 
 将其中服务器配置好静态IP，修改如下变量中的IP即可。
 
@@ -197,32 +194,14 @@ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | gre
 kubectl -n kubernetes-dashboard create token admin-user
 
 ```
-
-https://www.oiox.cn/
-
-https://www.chenby.cn/
-
-https://cby-chen.github.io/
-
-https://weibo.com/u/5982474121
-
-https://blog.csdn.net/qq_33921750
-
-https://my.oschina.net/u/3981543
-
-https://www.zhihu.com/people/chen-bu-yun-2
-
-https://segmentfault.com/u/hppyvyv6/articles
-
-https://juejin.cn/user/3315782802482007
-
-https://space.bilibili.com/352476552/article
-
-https://cloud.tencent.com/developer/column/93230
-
-https://www.jianshu.com/u/0f894314ae2c
-
-https://www.toutiao.com/c/user/token/MS4wLjABAAAAeqOrhjsoRZSj7iBJbjLJyMwYT5D0mLOgCoo4pEmpr4A/
-
-CSDN、GitHub、知乎、开源中国、思否、掘金、简书、
-腾讯云、哔哩哔哩、今日头条、新浪微博、个人博客、全网可搜《小陈运维》
+> **关于**
+>
+> https://www.oiox.cn/
+>
+> https://www.oiox.cn/index.php/start-page.html
+>
+> **CSDN、GitHub、知乎、开源中国、思否、掘金、简书、华为云、阿里云、腾讯云、哔哩哔哩、今日头条、新浪微博、个人博客**
+>
+> **全网可搜《小陈运维》**
+>
+> **文章主要发布于微信公众号**
