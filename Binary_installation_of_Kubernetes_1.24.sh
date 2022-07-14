@@ -468,7 +468,7 @@ openssl genrsa -out /etc/kubernetes/pki/sa.key 2048
 openssl rsa -in /etc/kubernetes/pki/sa.key -pubout -out /etc/kubernetes/pki/sa.pub
 
 echo "分发证书到每个节点"
-for NODE in $Master; do 
+for NODE in $k8s; do 
     for FILE in $(ls /etc/kubernetes/pki | grep -v etcd); do 
     scp /etc/kubernetes/pki/"${FILE}" "$NODE":/etc/kubernetes/pki/"${FILE}";
     done; 
