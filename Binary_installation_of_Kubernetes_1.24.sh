@@ -455,7 +455,7 @@ kubectl config use-context kubernetes-admin@kubernetes     --kubeconfig=/etc/kub
 
 cfssl gencert -ca=/etc/kubernetes/pki/ca.pem  -ca-key=/etc/kubernetes/pki/ca-key.pem  -config=ca-config.json  -profile=kubernetes  kube-proxy-csr.json | cfssljson -bare /etc/kubernetes/pki/kube-proxy
 
-kubectl config set-cluster kubernetes      --certificate-authority=/etc/kubernetes/pki/ca.pem     --embed-certs=true      --server=https://$lb-vip:8443      --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig
+kubectl config set-cluster kubernetes      --certificate-authority=/etc/kubernetes/pki/ca.pem     --embed-certs=true      --server=https://$lb_vip:8443      --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig
 
 kubectl config set-credentials kube-proxy    --client-certificate=/etc/kubernetes/pki/kube-proxy.pem      --client-key=/etc/kubernetes/pki/kube-proxy-key.pem     --embed-certs=true     --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig
 
